@@ -62,7 +62,7 @@ public class Importer {
 		/*
 		 * line
 		 */
-		return LineProtocol.line("temp", tags, fields, Long.toString(System.currentTimeMillis()));
+		return LineProtocol.line("housetemperature", tags, fields, Long.toString(System.currentTimeMillis()));
 	}
 
 	private String getDeviceName(Device device) {
