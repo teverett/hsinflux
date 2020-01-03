@@ -1,0 +1,12 @@
+# DDL
+CREATE DATABASE house
+CREATE RETENTION POLICY oneyear ON house DURATION 52w REPLICATION 1
+
+# DML
+# CONTEXT-DATABASE: house
+# CONTEXT-RETENTION-POLICY: oneyear
+temp,devicename=MainFloorFireplaceTemperature temperature=21.9 1578088247601
+temp,devicename=BasementFireplaceTemperature temperature=15.3 1578088247601
+temp,devicename=GarageMotionDetectorTemperature temperature=255 1578088247601
+temp,devicename=DataCenterDetectorTemperature temperature=10 1578088247601
+temp,devicename=FurnaceThermostatTemperature temperature=20.3 1578088247601
