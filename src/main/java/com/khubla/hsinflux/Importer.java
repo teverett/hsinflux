@@ -6,20 +6,9 @@ import java.util.*;
 import com.khubla.hsclient.*;
 import com.khubla.hsclient.domain.*;
 import com.khubla.hsclient.response.*;
+import com.khubla.hsclient.util.*;
 
 public class Importer {
-	public String getHsURL() {
-		return hsURL;
-	}
-
-	public String getHsPassword() {
-		return hsPassword;
-	}
-
-	public String getHsUsername() {
-		return hsUsername;
-	}
-
 	private final String hsURL;
 	private final String hsPassword;
 	private final String hsUsername;
@@ -31,42 +20,58 @@ public class Importer {
 		this.hsUsername = hsUsername;
 	}
 
-	public void run() throws HSClientException, InterruptedException, IOException {
-		Device device = getDevice("Furnace Thermostat", "Z-Wave Temperature");
-		if (device != null) {
-			File f = new File("output.txt");
-			if (false == f.exists()) {
-				f.createNewFile();
-			}
-			FileOutputStream fos = new FileOutputStream("output.txt", true);
-			while (true) {
-				String status = getStatus(device);
-				String s = new Date().getTime() + "," + status + "\n";
-				fos.write(s.getBytes());
-				fos.flush();
-				System.out.print(s);
-				Thread.sleep(1000 * 60);
-			}
-		}
+	private String createStatusLine(Device device) throws HSClientException {
+		final Map<String, String> fields = new HashMap<String, String>();
+		fields.put("status", device.getStatus());
+		return LineProtocol.line(device.getName(), null, fields, null);
+	}
+
+	public String getHsPassword() {
+		return hsPassword;
+	}
+
+	public String getHsURL() {
+		return hsURL;
+	}
+
+	public String getHsUsername() {
+		return hsUsername;
 	}
 
 	public String getStatus(Device device) throws HSClientException {
-		HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
-		StatusResponse statusResponse = hsClient.getStatus(device.getRef(), null, null);
+		final HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
+		final StatusResponse statusResponse = hsClient.getStatus(device.getRef(), null, null);
 		return (statusResponse.getDevices().get(0).getStatus());
 	}
 
-	public Device getDevice(String parentDeviceName, String subDeviceType) throws HSClientException {
-		HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
-		Map<String, Device> deviceMapByName = hsClient.getDevicesByName();
-		Map<Integer, Device> deviceMapByRef = hsClient.getDevicesByRef();
-		Device mainFloorThermostat = deviceMapByName.get(parentDeviceName);
-		for (Integer ref : mainFloorThermostat.getAssociated_devices()) {
-			Device associatedDevice = deviceMapByRef.get(ref);
-			if (subDeviceType.compareTo(associatedDevice.getDevice_type_string()) == 0) {
-				return associatedDevice;
+	public void run() throws HSClientException, InterruptedException, IOException {
+		/*
+		 * create file
+		 */
+		final File f = new File("output.txt");
+		if (false == f.exists()) {
+			f.createNewFile();
+		}
+		final FileOutputStream fos = new FileOutputStream("output.txt", true);
+		/*
+		 * get devices
+		 */
+		final HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
+		final DeviceUtil deviceUtil = new DeviceUtil(hsClient);
+		final List<Device> devices = deviceUtil.getDevices("Z-Wave Temperature");
+		/*
+		 * spin
+		 */
+		if (devices != null) {
+			while (true) {
+				for (final Device device : devices) {
+					final String s = createStatusLine(device) + "\n";
+					fos.write(s.getBytes());
+					fos.flush();
+					System.out.print(s);
+				}
+				Thread.sleep(1000 * 60);
 			}
 		}
-		return null;
 	}
 }
