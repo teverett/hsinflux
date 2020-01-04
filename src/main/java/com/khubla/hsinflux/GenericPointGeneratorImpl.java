@@ -11,9 +11,10 @@ public class GenericPointGeneratorImpl implements PointGenerator<Device> {
 	public Point generatePoint(Device device) {
 		try {
 			final Double value = device.getValue();
+			final long lastChange = device.getLast_change() == null ? 0 : device.getLast_change().getTime();
 			final Point point = Point.measurement("device").tag("ref", device.getRef().toString()).tag("location1", device.getLocation()).tag("location1", device.getLocation())
 					.tag("location2", device.getLocation2()).tag("name", getDeviceName(device)).tag("type", device.getDevice_type_string()).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-					.addField("value", value).addField("status", device.getStatus()).addField("lastchange", device.getLast_change().getTime()).build();
+					.addField("value", value).addField("status", device.getStatus()).addField("lastchange", lastChange).build();
 			return point;
 		} catch (final Exception e) {
 			e.printStackTrace();
