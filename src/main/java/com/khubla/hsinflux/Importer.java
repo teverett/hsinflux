@@ -41,7 +41,7 @@ public class Importer {
 		return stringBuilder.toString();
 	}
 
-	private double getDeviceTemperature(Device device) throws HSClientException {
+	private double getDeviceTemperature(Device device) throws HSClientException, IOException {
 		String status = updateCurrentStatus(device);
 		final int i = status.indexOf('C');
 		if (-1 != i) {
@@ -74,37 +74,58 @@ public class Importer {
 		return influxUsername;
 	}
 
-	private String updateCurrentStatus(Device device) throws HSClientException {
-		final HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
-		final StatusResponse statusResponse = hsClient.getStatus(device.getRef(), null, null);
-		return (statusResponse.getDevices().get(0).getStatus());
-	}
-
 	public void run() throws HSClientException, InterruptedException, IOException {
-		/*
-		 * get devices
-		 */
-		final HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
-		final DeviceUtil deviceUtil = new DeviceUtil(hsClient);
-		final List<Device> temperatureDevices = deviceUtil.getDevices("Z-Wave Temperature");
-		final List<Device> heatingSetpointDevices = deviceUtil.getDevices("Z-Wave Heating  Setpoint");
-		final List<Device> coolingSetpointDevices = deviceUtil.getDevices("Z-Wave Cooling  Setpoint");
+		List<Device> temperatureDevices = null;
+		List<Device> heatingSetpointDevices = null;
+		List<Device> coolingSetpointDevices = null;
+		HSClient hsClient = null;
+		try {
+			/*
+			 * get devices
+			 */
+			hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
+			final DeviceUtil deviceUtil = new DeviceUtil(hsClient);
+			temperatureDevices = deviceUtil.getDevices("Z-Wave Temperature");
+			heatingSetpointDevices = deviceUtil.getDevices("Z-Wave Heating  Setpoint");
+			coolingSetpointDevices = deviceUtil.getDevices("Z-Wave Cooling  Setpoint");
+		} catch (final Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != hsClient) {
+				hsClient.close();
+			}
+		}
 		/*
 		 * spin
 		 */
 		if (temperatureDevices != null) {
 			while (true) {
-				for (final Device device : temperatureDevices) {
-					writeToInflux(getDeviceName(device), "temperature", getDeviceTemperature(device));
+				try {
+					for (final Device device : temperatureDevices) {
+						writeToInflux(getDeviceName(device), "temperature", getDeviceTemperature(device));
+					}
+					for (final Device device : heatingSetpointDevices) {
+						writeToInflux(getDeviceName(device), "thermostatHeat", getDeviceTemperature(device));
+					}
+					for (final Device device : coolingSetpointDevices) {
+						writeToInflux(getDeviceName(device), "thermostatCool", getDeviceTemperature(device));
+					}
+					Thread.sleep(1000 * 60);
+				} catch (final Exception e) {
+					e.printStackTrace();
 				}
-				for (final Device device : heatingSetpointDevices) {
-					writeToInflux(getDeviceName(device), "thermostatHeat", getDeviceTemperature(device));
-				}
-				for (final Device device : coolingSetpointDevices) {
-					writeToInflux(getDeviceName(device), "thermostatCool", getDeviceTemperature(device));
-				}
-				Thread.sleep(1000 * 60);
 			}
+		}
+	}
+
+	private String updateCurrentStatus(Device device) throws HSClientException, IOException {
+		HSClient hsClient = null;
+		try {
+			hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
+			final StatusResponse statusResponse = hsClient.getStatus(device.getRef(), null, null);
+			return (statusResponse.getDevices().get(0).getStatus());
+		} finally {
+			hsClient.close();
 		}
 	}
 
