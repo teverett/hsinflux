@@ -2,7 +2,6 @@ package com.khubla.hsinflux;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.*;
 
 import org.influxdb.*;
 import org.influxdb.dto.*;
@@ -10,9 +9,9 @@ import org.influxdb.dto.*;
 import com.khubla.hsclient.*;
 import com.khubla.hsclient.domain.*;
 import com.khubla.hsclient.response.*;
-import com.khubla.hsclient.util.*;
 
 public class Importer {
+	private static final String DB_NAME = "house";
 	private final String hsURL;
 	private final String hsPassword;
 	private final String hsUsername;
@@ -28,26 +27,6 @@ public class Importer {
 		this.influxURL = influxURL;
 		this.influxUsername = influxUsername;
 		this.influxPassword = influxPassword;
-	}
-
-	private String getDeviceName(Device device) {
-		final StringBuilder stringBuilder = new StringBuilder();
-		final String n = device.getName();
-		for (int i = 0; i < n.length(); i++) {
-			if ((((n.charAt(i) >= 'a') && (n.charAt(i) <= 'z'))) || (((n.charAt(i) >= 'A') && (n.charAt(i) <= 'Z')))) {
-				stringBuilder.append(n.charAt(i));
-			}
-		}
-		return stringBuilder.toString();
-	}
-
-	private double getDeviceTemperature(Device device) throws HSClientException, IOException {
-		String status = updateCurrentStatus(device);
-		final int i = status.indexOf('C');
-		if (-1 != i) {
-			status = status.substring(0, i - 1);
-		}
-		return Double.parseDouble(status.trim());
 	}
 
 	public String getHsPassword() {
@@ -75,19 +54,14 @@ public class Importer {
 	}
 
 	public void run() throws HSClientException, InterruptedException, IOException {
-		List<Device> temperatureDevices = null;
-		List<Device> heatingSetpointDevices = null;
-		List<Device> coolingSetpointDevices = null;
+		Map<Integer, Device> devices = null;
 		HSClient hsClient = null;
 		try {
 			/*
 			 * get devices
 			 */
 			hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
-			final DeviceUtil deviceUtil = new DeviceUtil(hsClient);
-			temperatureDevices = deviceUtil.getDevices("Z-Wave Temperature");
-			heatingSetpointDevices = deviceUtil.getDevices("Z-Wave Heating  Setpoint");
-			coolingSetpointDevices = deviceUtil.getDevices("Z-Wave Cooling  Setpoint");
+			devices = hsClient.getDevicesByRef();
 		} catch (final Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -98,18 +72,20 @@ public class Importer {
 		/*
 		 * spin
 		 */
-		if (temperatureDevices != null) {
+		if (devices != null) {
 			while (true) {
 				try {
-					for (final Device device : temperatureDevices) {
-						writeToInflux(getDeviceName(device), "temperature", getDeviceTemperature(device));
+					/*
+					 * walk devices
+					 */
+					final BatchPoints batchPoints = BatchPoints.database(DB_NAME).build();
+					for (final Integer ref : devices.keySet()) {
+						final Device device = updateDevice(ref);
+						final PointGenerator<Device> pointGenerator = new GenericPointGeneratorImpl();
+						final Point point = pointGenerator.generatePoint(device);
+						batchPoints.point(point);
 					}
-					for (final Device device : heatingSetpointDevices) {
-						writeToInflux(getDeviceName(device), "thermostatHeat", getDeviceTemperature(device));
-					}
-					for (final Device device : coolingSetpointDevices) {
-						writeToInflux(getDeviceName(device), "thermostatCool", getDeviceTemperature(device));
-					}
+					writeToInflux(batchPoints);
 					Thread.sleep(1000 * 60);
 				} catch (final Exception e) {
 					e.printStackTrace();
@@ -118,24 +94,22 @@ public class Importer {
 		}
 	}
 
-	private String updateCurrentStatus(Device device) throws HSClientException, IOException {
+	private Device updateDevice(Integer ref) throws HSClientException, IOException {
 		HSClient hsClient = null;
 		try {
 			hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
-			final StatusResponse statusResponse = hsClient.getStatus(device.getRef(), null, null);
-			return (statusResponse.getDevices().get(0).getStatus());
+			final StatusResponse statusResponse = hsClient.getStatus(ref, null, null);
+			return (statusResponse.getDevices().get(0));
 		} finally {
 			hsClient.close();
 		}
 	}
 
-	private void writeToInflux(String name, String type, double temperature) {
+	private void writeToInflux(BatchPoints batchPoints) {
 		InfluxDB influxDB = null;
 		try {
 			influxDB = InfluxDBFactory.connect(influxURL, influxUsername, influxPassword);
-			influxDB.setDatabase("house");
-			final Point point = Point.measurement("temperature").tag("name", name).tag("type", type).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS).addField("temperature", temperature).build();
-			influxDB.write(point);
+			influxDB.write(batchPoints);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		} finally {
