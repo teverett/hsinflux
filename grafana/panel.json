@@ -6,8 +6,8 @@
   "datasource": "InfluxDB",
   "fill": 1,
   "gridPos": {
-    "h": 9,
-    "w": 12,
+    "h": 15,
+    "w": 23,
     "x": 0,
     "y": 0
   },
@@ -51,7 +51,7 @@
         }
       ],
       "hide": false,
-      "measurement": "temperature",
+      "measurement": "device",
       "orderByTime": "ASC",
       "policy": "autogen",
       "refId": "A",
@@ -60,7 +60,7 @@
         [
           {
             "params": [
-              "temperature"
+              "value"
             ],
             "type": "field"
           },
@@ -95,7 +95,7 @@
         }
       ],
       "hide": false,
-      "measurement": "temperature",
+      "measurement": "device",
       "orderByTime": "ASC",
       "policy": "autogen",
       "refId": "B",
@@ -104,7 +104,7 @@
         [
           {
             "params": [
-              "temperature"
+              "value"
             ],
             "type": "field"
           },
@@ -139,7 +139,7 @@
         }
       ],
       "hide": false,
-      "measurement": "temperature",
+      "measurement": "device",
       "orderByTime": "ASC",
       "policy": "default",
       "refId": "C",
@@ -148,7 +148,7 @@
         [
           {
             "params": [
-              "temperature"
+              "value"
             ],
             "type": "field"
           },
@@ -182,7 +182,7 @@
           "type": "fill"
         }
       ],
-      "measurement": "temperature",
+      "measurement": "device",
       "orderByTime": "ASC",
       "policy": "default",
       "refId": "D",
@@ -191,7 +191,7 @@
         [
           {
             "params": [
-              "temperature"
+              "value"
             ],
             "type": "field"
           },
@@ -225,7 +225,7 @@
           "type": "fill"
         }
       ],
-      "measurement": "temperature",
+      "measurement": "device",
       "orderByTime": "ASC",
       "policy": "default",
       "refId": "E",
@@ -234,7 +234,7 @@
         [
           {
             "params": [
-              "temperature"
+              "value"
             ],
             "type": "field"
           },
@@ -257,7 +257,7 @@
   "timeFrom": null,
   "timeRegions": [],
   "timeShift": null,
-  "title": "Basement Temp",
+  "title": "House Temperatures",
   "tooltip": {
     "shared": true,
     "sort": 0,
@@ -295,4 +295,3 @@
     "alignLevel": null
   }
 }
-
