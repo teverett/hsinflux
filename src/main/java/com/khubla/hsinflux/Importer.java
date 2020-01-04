@@ -86,28 +86,36 @@ public class Importer {
 		 */
 		final HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
 		final DeviceUtil deviceUtil = new DeviceUtil(hsClient);
-		final List<Device> devices = deviceUtil.getDevices("Z-Wave Temperature");
+		final List<Device> temperatureDevices = deviceUtil.getDevices("Z-Wave Temperature");
+		final List<Device> heatingSetpointDevices = deviceUtil.getDevices("Z-Wave Heating  Setpoint");
+		final List<Device> coolingSetpointDevices = deviceUtil.getDevices("Z-Wave Cooling  Setpoint");
 		/*
 		 * spin
 		 */
-		if (devices != null) {
+		if (temperatureDevices != null) {
 			while (true) {
-				for (final Device device : devices) {
-					writeToInflux(getDeviceName(device), getDeviceTemperature(device));
+				for (final Device device : temperatureDevices) {
+					writeToInflux(getDeviceName(device), "temperature", getDeviceTemperature(device));
+				}
+				for (final Device device : heatingSetpointDevices) {
+					writeToInflux(getDeviceName(device), "thermostatHeat", getDeviceTemperature(device));
+				}
+				for (final Device device : coolingSetpointDevices) {
+					writeToInflux(getDeviceName(device), "thermostatCool", getDeviceTemperature(device));
 				}
 				Thread.sleep(1000 * 60);
 			}
 		}
 	}
 
-	private void writeToInflux(String name, double temperature) {
+	private void writeToInflux(String name, String type, double temperature) {
 		InfluxDB influxDB = null;
 		try {
 			influxDB = InfluxDBFactory.connect(influxURL, influxUsername, influxPassword);
 			influxDB.setDatabase("house");
-			final Point point = Point.measurement("temperature").tag("name", name).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS).addField("temperature", temperature).build();
+			final Point point = Point.measurement("temperature").tag("name", name).tag("type", type).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS).addField("temperature", temperature).build();
 			influxDB.write(point);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		} finally {
 			influxDB.close();
