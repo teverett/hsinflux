@@ -2,6 +2,10 @@ package com.khubla.hsinflux;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.*;
+
+import org.influxdb.*;
+import org.influxdb.dto.*;
 
 import com.khubla.hsclient.*;
 import com.khubla.hsclient.domain.*;
@@ -9,60 +13,21 @@ import com.khubla.hsclient.response.*;
 import com.khubla.hsclient.util.*;
 
 public class Importer {
-	private static final String OUTPUTFILE = "house.txt";
 	private final String hsURL;
 	private final String hsPassword;
 	private final String hsUsername;
+	private final String influxURL;
+	private final String influxPassword;
+	private final String influxUsername;
 
-	public Importer(String hsURL, String hsPassword, String hsUsername) {
+	public Importer(String hsURL, String hsUsername, String hsPassword, String influxURL, String influxUsername, String influxPassword) {
 		super();
 		this.hsURL = hsURL;
 		this.hsPassword = hsPassword;
 		this.hsUsername = hsUsername;
-	}
-
-	private void createFile() throws IOException {
-		final File f = new File(OUTPUTFILE);
-		if (false == f.exists()) {
-			f.createNewFile();
-			/*
-			 * write header
-			 */
-			FileOutputStream fos = null;
-			PrintWriter printWriter = null;
-			try {
-				fos = new FileOutputStream(OUTPUTFILE, true);
-				printWriter = new PrintWriter(fos);
-				printWriter.write("# DDL\n");
-				printWriter.write("CREATE DATABASE house\n");
-				printWriter.write("CREATE RETENTION POLICY oneyear ON house DURATION 52w REPLICATION 1\n");
-				printWriter.write("\n");
-				printWriter.write("# DML\n");
-				printWriter.write("# CONTEXT-DATABASE: house\n");
-				printWriter.write("# CONTEXT-RETENTION-POLICY: oneyear\n");
-			} finally {
-				printWriter.flush();
-				printWriter.close();
-				fos.close();
-			}
-		}
-	}
-
-	private String createStatusLine(Device device) throws HSClientException {
-		/*
-		 * tags
-		 */
-		final Map<String, String> tags = new HashMap<String, String>();
-		tags.put("devicename", getDeviceName(device));
-		/*
-		 * fields
-		 */
-		final Map<String, String> fields = new HashMap<String, String>();
-		fields.put("temperature", getDeviceTemperature(device));
-		/*
-		 * line
-		 */
-		return LineProtocol.line("housetemperature", tags, fields, Long.toString(System.currentTimeMillis()));
+		this.influxURL = influxURL;
+		this.influxUsername = influxUsername;
+		this.influxPassword = influxPassword;
 	}
 
 	private String getDeviceName(Device device) {
@@ -97,6 +62,18 @@ public class Importer {
 		return hsUsername;
 	}
 
+	public String getInfluxPassword() {
+		return influxPassword;
+	}
+
+	public String getInfluxURL() {
+		return influxURL;
+	}
+
+	public String getInfluxUsername() {
+		return influxUsername;
+	}
+
 	public String getStatus(Device device) throws HSClientException {
 		final HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
 		final StatusResponse statusResponse = hsClient.getStatus(device.getRef(), null, null);
@@ -105,39 +82,35 @@ public class Importer {
 
 	public void run() throws HSClientException, InterruptedException, IOException {
 		/*
-		 * create file
+		 * get devices
 		 */
-		createFile();
+		final HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
+		final DeviceUtil deviceUtil = new DeviceUtil(hsClient);
+		final List<Device> devices = deviceUtil.getDevices("Z-Wave Temperature");
 		/*
-		 * open stream
+		 * spin
 		 */
-		FileOutputStream fos = null;
-		PrintWriter printWriter = null;
-		try {
-			fos = new FileOutputStream(OUTPUTFILE, true);
-			printWriter = new PrintWriter(fos);
-			/*
-			 * get devices
-			 */
-			final HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
-			final DeviceUtil deviceUtil = new DeviceUtil(hsClient);
-			final List<Device> devices = deviceUtil.getDevices("Z-Wave Temperature");
-			/*
-			 * spin
-			 */
-			if (devices != null) {
-				while (true) {
-					for (final Device device : devices) {
-						final String s = createStatusLine(device) + "\n";
-						printWriter.write(s);
-						printWriter.flush();
-					}
-					Thread.sleep(1000 * 60);
+		if (devices != null) {
+			while (true) {
+				for (final Device device : devices) {
+					writeToInflux(getDeviceName(device), getDeviceTemperature(device));
 				}
+				Thread.sleep(1000 * 60);
 			}
+		}
+	}
+
+	private void writeToInflux(String name, String temperature) {
+		InfluxDB influxDB = null;
+		try {
+			influxDB = InfluxDBFactory.connect(influxURL, influxUsername, influxPassword);
+			influxDB.setDatabase("house");
+			final Point point = Point.measurement("temperature").tag("name", name).time(System.currentTimeMillis(), TimeUnit.MILLISECONDS).addField("temperature", temperature).build();
+			influxDB.write(point);
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
-			printWriter.close();
-			fos.close();
+			influxDB.close();
 		}
 	}
 }
