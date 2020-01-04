@@ -41,8 +41,8 @@ public class Importer {
 		return stringBuilder.toString();
 	}
 
-	private double getDeviceTemperature(Device device) {
-		String status = device.getStatus();
+	private double getDeviceTemperature(Device device) throws HSClientException {
+		String status = updateCurrentStatus(device);
 		final int i = status.indexOf('C');
 		if (-1 != i) {
 			status = status.substring(0, i - 1);
@@ -74,7 +74,7 @@ public class Importer {
 		return influxUsername;
 	}
 
-	public String getStatus(Device device) throws HSClientException {
+	private String updateCurrentStatus(Device device) throws HSClientException {
 		final HSClient hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
 		final StatusResponse statusResponse = hsClient.getStatus(device.getRef(), null, null);
 		return (statusResponse.getDevices().get(0).getStatus());
