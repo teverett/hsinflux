@@ -41,13 +41,13 @@ public class Importer {
 		return stringBuilder.toString();
 	}
 
-	private String getDeviceTemperature(Device device) {
+	private double getDeviceTemperature(Device device) {
 		String status = device.getStatus();
 		final int i = status.indexOf('C');
 		if (-1 != i) {
 			status = status.substring(0, i - 1);
 		}
-		return status.trim();
+		return Double.parseDouble(status.trim());
 	}
 
 	public String getHsPassword() {
@@ -100,7 +100,7 @@ public class Importer {
 		}
 	}
 
-	private void writeToInflux(String name, String temperature) {
+	private void writeToInflux(String name, double temperature) {
 		InfluxDB influxDB = null;
 		try {
 			influxDB = InfluxDBFactory.connect(influxURL, influxUsername, influxPassword);
