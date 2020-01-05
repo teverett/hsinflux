@@ -34,6 +34,18 @@ pollingthreads=5
 pollinginterval=1
 
 ```
+Preparing the InfluxDB database
+-------------------
+
+The following command create the InfluxDB database
+
+```
+CREATE DATABASE hsinflux 
+CREATE RETENTION POLICY hsinflux ON hsinflux DURATION 52w REPLICATION 1
+USE hsinflux
+CREATE USER INFLUXUSERNAME WITH PASSWORD 'INFLUXPASSWORD' WITH ALL PRIVILEGES;
+```
+
 
 Usage
 -------------------
