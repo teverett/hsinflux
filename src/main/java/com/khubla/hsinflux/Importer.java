@@ -6,12 +6,20 @@ import java.util.concurrent.*;
 
 import org.influxdb.*;
 import org.influxdb.dto.*;
+import org.slf4j.*;
 
 import com.khubla.hsclient.*;
 import com.khubla.hsclient.domain.*;
 import com.khubla.hsinflux.pointgenerator.*;
 
 public class Importer {
+	/**
+	 * logger
+	 */
+	private static Logger logger = LoggerFactory.getLogger(Importer.class);
+	/**
+	 * configuration for hsinflux
+	 */
 	private final Configuration configuration;
 
 	public Importer(Configuration configuration) {
@@ -29,7 +37,7 @@ public class Importer {
 			hsClient = new HSClientImpl(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
 			devices = hsClient.getDevicesByRef();
 		} catch (final Exception e) {
-			e.printStackTrace();
+			logger.error("Error getting devices from HomeSeer", e);
 		} finally {
 			if (null != hsClient) {
 				hsClient.close();
@@ -62,11 +70,13 @@ public class Importer {
 							public void run() {
 								try {
 									final Device device = updateDevice(ref);
-									final PointGenerator<Device> pointGenerator = new DevicePointGeneratorImpl();
-									final Point point = pointGenerator.generatePoint(device);
-									points.add(point);
+									if (null != device) {
+										final PointGenerator<Device> pointGenerator = new DevicePointGeneratorImpl();
+										final Point point = pointGenerator.generatePoint(device);
+										points.add(point);
+									}
 								} catch (final Exception e) {
-									e.printStackTrace();
+									logger.error("Error collecting data for device " + ref, e);
 								}
 							}
 						};
@@ -92,13 +102,16 @@ public class Importer {
 					 * write poll data
 					 */
 					writePollDataToInflux(new Poll(points.size(), configuration.getPollingthreads(), t));
-					System.out.println("Data collection of " + points.size() + " points performed in " + Long.toString(t) + " ms on " + configuration.getPollingthreads() + " threads");
+					/*
+					 * log
+					 */
+					logger.info("Data collection of " + points.size() + " points performed in " + Long.toString(t) + " ms on " + configuration.getPollingthreads() + " threads");
 					/*
 					 * nap time
 					 */
 					Thread.sleep((configuration.getPollinginterval() * 60 * 1000) - t);
 				} catch (final Exception e) {
-					e.printStackTrace();
+					logger.error("Error polling", e);
 				}
 			}
 		}
@@ -109,6 +122,9 @@ public class Importer {
 		try {
 			hsClient = new HSClientImpl(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
 			return hsClient.getDevice(ref);
+		} catch (final Exception e) {
+			logger.error("Error updating device " + ref, e);
+			return null;
 		} finally {
 			hsClient.close();
 		}
@@ -133,7 +149,7 @@ public class Importer {
 				influxDB = InfluxDBFactory.connect(configuration.getInfluxurl(), configuration.getInfluxuser(), configuration.getInfluxpassword());
 				influxDB.write(batchPoints);
 			} catch (final Exception e) {
-				e.printStackTrace();
+				logger.error("Error writing device data to InfluxDB ", e);
 			} finally {
 				influxDB.close();
 			}
@@ -155,7 +171,7 @@ public class Importer {
 				influxDB.setDatabase(configuration.getInfluxdb());
 				influxDB.write(point);
 			} catch (final Exception e) {
-				e.printStackTrace();
+				logger.error("Error writing poll data to InfluxDB ", e);
 			} finally {
 				influxDB.close();
 			}
