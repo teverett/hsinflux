@@ -8,7 +8,6 @@ import org.influxdb.dto.*;
 
 import com.khubla.hsclient.*;
 import com.khubla.hsclient.domain.*;
-import com.khubla.hsclient.response.*;
 
 public class Importer {
 	private static final String DB_NAME = "house";
@@ -60,7 +59,7 @@ public class Importer {
 			/*
 			 * get devices
 			 */
-			hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
+			hsClient = new HSClientImpl(hsURL, hsUsername, hsPassword);
 			devices = hsClient.getDevicesByRef();
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -97,9 +96,8 @@ public class Importer {
 	private Device updateDevice(Integer ref) throws HSClientException, IOException {
 		HSClient hsClient = null;
 		try {
-			hsClient = HSClientImpl.connect(hsURL, hsUsername, hsPassword);
-			final StatusResponse statusResponse = hsClient.getStatus(ref, null, null);
-			return (statusResponse.getDevices().get(0));
+			hsClient = new HSClientImpl(hsURL, hsUsername, hsPassword);
+			return hsClient.getDevice(ref);
 		} finally {
 			hsClient.close();
 		}
