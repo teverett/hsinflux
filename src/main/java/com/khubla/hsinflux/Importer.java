@@ -11,48 +11,11 @@ import com.khubla.hsclient.*;
 import com.khubla.hsclient.domain.*;
 
 public class Importer {
-	private static final String DB_NAME = "house";
-	private static final int THREAD_COUNT = 5;
-	private static final int CYCLE_TIME_MS = 1000 * 60;
-	private final String hsURL;
-	private final String hsPassword;
-	private final String hsUsername;
-	private final String influxURL;
-	private final String influxPassword;
-	private final String influxUsername;
+	private final Configuration configuration;
 
-	public Importer(String hsURL, String hsUsername, String hsPassword, String influxURL, String influxUsername, String influxPassword) {
+	public Importer(Configuration configuration) {
 		super();
-		this.hsURL = hsURL;
-		this.hsPassword = hsPassword;
-		this.hsUsername = hsUsername;
-		this.influxURL = influxURL;
-		this.influxUsername = influxUsername;
-		this.influxPassword = influxPassword;
-	}
-
-	public String getHsPassword() {
-		return hsPassword;
-	}
-
-	public String getHsURL() {
-		return hsURL;
-	}
-
-	public String getHsUsername() {
-		return hsUsername;
-	}
-
-	public String getInfluxPassword() {
-		return influxPassword;
-	}
-
-	public String getInfluxURL() {
-		return influxURL;
-	}
-
-	public String getInfluxUsername() {
-		return influxUsername;
+		this.configuration = configuration;
 	}
 
 	public void run() throws HSClientException, InterruptedException, IOException {
@@ -62,7 +25,7 @@ public class Importer {
 			/*
 			 * get devices
 			 */
-			hsClient = new HSClientImpl(hsURL, hsUsername, hsPassword);
+			hsClient = new HSClientImpl(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
 			devices = hsClient.getDevicesByRef();
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -81,7 +44,7 @@ public class Importer {
 					/*
 					 * thread pool
 					 */
-					final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+					final ExecutorService executorService = Executors.newFixedThreadPool(configuration.getPollingthreads());
 					/*
 					 * list
 					 */
@@ -124,11 +87,11 @@ public class Importer {
 					 * log the time
 					 */
 					final long t = System.currentTimeMillis() - start;
-					System.out.println("Data collection performed in " + Long.toString(t) + " ms on " + THREAD_COUNT + " threads");
+					System.out.println("Data collection performed in " + Long.toString(t) + " ms on " + configuration.getPollingthreads() + " threads");
 					/*
 					 * nap time
 					 */
-					Thread.sleep(CYCLE_TIME_MS - t);
+					Thread.sleep((configuration.getPollinginterval() * 60 * 1000) - t);
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}
@@ -139,7 +102,7 @@ public class Importer {
 	private Device updateDevice(Integer ref) throws HSClientException, IOException {
 		HSClient hsClient = null;
 		try {
-			hsClient = new HSClientImpl(hsURL, hsUsername, hsPassword);
+			hsClient = new HSClientImpl(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
 			return hsClient.getDevice(ref);
 		} finally {
 			hsClient.close();
@@ -155,14 +118,14 @@ public class Importer {
 		/*
 		 * make the batch
 		 */
-		final BatchPoints batchPoints = BatchPoints.database(DB_NAME).build();
+		final BatchPoints batchPoints = BatchPoints.database(configuration.getInfluxdb()).build();
 		for (final Point point : points) {
 			batchPoints.point(point);
 		}
 		new Thread(() -> {
 			InfluxDB influxDB = null;
 			try {
-				influxDB = InfluxDBFactory.connect(influxURL, influxUsername, influxPassword);
+				influxDB = InfluxDBFactory.connect(configuration.getInfluxurl(), configuration.getInfluxuser(), configuration.getInfluxpassword());
 				influxDB.write(batchPoints);
 			} catch (final Exception e) {
 				e.printStackTrace();
