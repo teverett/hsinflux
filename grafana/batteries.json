@@ -1,594 +1,594 @@
 {
-  "type": "graph",
-  "title": "Battery Status",
+  "aliasColors": {},
+  "bars": false,
+  "dashLength": 10,
+  "dashes": false,
+  "datasource": "InfluxDB",
+  "fill": 1,
   "gridPos": {
-    "x": 12,
-    "y": 6,
+    "h": 8,
     "w": 12,
-    "h": 8
+    "x": 12,
+    "y": 6
   },
   "id": 8,
-  "datasource": "InfluxDB",
+  "legend": {
+    "avg": false,
+    "current": false,
+    "max": false,
+    "min": false,
+    "show": true,
+    "total": false,
+    "values": false
+  },
+  "lines": true,
+  "linewidth": 1,
+  "links": [],
+  "nullPointMode": "null",
+  "percentage": false,
+  "pointradius": 5,
+  "points": false,
+  "renderer": "flot",
+  "seriesOverrides": [],
+  "spaceLength": 10,
+  "stack": false,
+  "steppedLine": false,
   "targets": [
     {
-      "refId": "A",
-      "policy": "autogen",
-      "resultFormat": "time_series",
+      "alias": "Basement Bedroom Window",
+      "groupBy": [
+        {
+          "params": [
+            "1m"
+          ],
+          "type": "time"
+        },
+        {
+          "params": [
+            "null"
+          ],
+          "type": "fill"
+        }
+      ],
+      "measurement": "device",
       "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "A",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "value"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "mean"
+          }
+        ]
+      ],
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "BasementBedroomWindowBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Basement Rear Window",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "B",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Basement Bedroom Window"
-    },
-    {
-      "refId": "B",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "BasementRearWindowBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Server Room Door",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "C",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Basement Rear Window"
-    },
-    {
-      "refId": "C",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "ServerRoomDoorBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Main Floor Rear Window",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "D",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Server Room Door"
-    },
-    {
-      "refId": "D",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "MainFloorRearWindowBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Main Floor Front Window",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "E",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Main Floor Rear Window"
-    },
-    {
-      "refId": "E",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "MainFloorFrontWindowBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Man Door",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "default",
+      "refId": "F",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Main Floor Front Window"
-    },
-    {
-      "refId": "F",
-      "policy": "default",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "ManDoorSensorBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Front Door",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "G",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Man Door"
-    },
-    {
-      "refId": "G",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "FrontDoorSensorBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Basement Fireplace",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "H",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Front Door"
-    },
-    {
-      "refId": "H",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "BasementFireplaceBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Main Floor Fireplace",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "I",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Basement Fireplace"
-    },
-    {
-      "refId": "I",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "MainFloorFireplaceBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Furnace",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "J",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Main Floor Fireplace"
-    },
-    {
-      "refId": "J",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "FurnaceThermostatBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Garage Motion",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "K",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Furnace"
-    },
-    {
-      "refId": "K",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "GarageMotionDetectorBattery"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Data Center",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "L",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Garage Motion"
-    },
-    {
-      "refId": "L",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "DataCenterMotionDetectorBattery"
         }
-      ],
-      "groupBy": [
-        {
-          "type": "time",
-          "params": [
-            "1m"
-          ]
-        },
-        {
-          "type": "fill",
-          "params": [
-            "null"
-          ]
-        }
-      ],
-      "select": [
-        [
-          {
-            "type": "field",
-            "params": [
-              "value"
-            ]
-          },
-          {
-            "type": "mean",
-            "params": []
-          }
-        ]
-      ],
-      "measurement": "device",
-      "alias": "Data Center"
+      ]
     }
   ],
-  "renderer": "flot",
-  "yaxes": [
-    {
-      "label": null,
-      "show": true,
-      "logBase": 1,
-      "min": null,
-      "max": null,
-      "format": "short"
-    },
-    {
-      "label": null,
-      "show": true,
-      "logBase": 1,
-      "min": null,
-      "max": null,
-      "format": "short"
-    }
-  ],
+  "thresholds": [],
+  "timeFrom": null,
+  "timeRegions": [],
+  "timeShift": null,
+  "title": "Battery Status",
+  "tooltip": {
+    "shared": true,
+    "sort": 0,
+    "value_type": "individual"
+  },
+  "type": "graph",
   "xaxis": {
-    "show": true,
+    "buckets": null,
     "mode": "time",
     "name": null,
-    "values": [],
-    "buckets": null
+    "show": true,
+    "values": []
   },
+  "yaxes": [
+    {
+      "format": "short",
+      "label": null,
+      "logBase": 1,
+      "max": null,
+      "min": null,
+      "show": true
+    },
+    {
+      "format": "short",
+      "label": null,
+      "logBase": 1,
+      "max": null,
+      "min": null,
+      "show": true
+    }
+  ],
   "yaxis": {
     "align": false,
     "alignLevel": null
-  },
-  "lines": true,
-  "fill": 1,
-  "linewidth": 1,
-  "dashes": false,
-  "dashLength": 10,
-  "spaceLength": 10,
-  "points": false,
-  "pointradius": 5,
-  "bars": false,
-  "stack": false,
-  "percentage": false,
-  "legend": {
-    "show": true,
-    "values": false,
-    "min": false,
-    "max": false,
-    "current": false,
-    "total": false,
-    "avg": false
-  },
-  "nullPointMode": "null",
-  "steppedLine": false,
-  "tooltip": {
-    "value_type": "individual",
-    "shared": true,
-    "sort": 0
-  },
-  "timeFrom": null,
-  "timeShift": null,
-  "aliasColors": {},
-  "seriesOverrides": [],
-  "thresholds": [],
-  "timeRegions": [],
-  "links": []
+  }
 }

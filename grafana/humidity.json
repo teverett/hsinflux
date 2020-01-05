@@ -3,12 +3,13 @@
   "bars": false,
   "dashLength": 10,
   "dashes": false,
+  "datasource": "InfluxDB",
   "fill": 1,
   "gridPos": {
-    "h": 5,
-    "w": 24,
-    "x": 0,
-    "y": 8
+    "h": 6,
+    "w": 12,
+    "x": 12,
+    "y": 0
   },
   "id": 4,
   "legend": {
@@ -22,6 +23,7 @@
   },
   "lines": true,
   "linewidth": 1,
+  "links": [],
   "nullPointMode": "null",
   "percentage": false,
   "pointradius": 5,
@@ -33,134 +35,134 @@
   "steppedLine": false,
   "targets": [
     {
-      "refId": "B",
+      "alias": "Furnace",
+      "groupBy": [
+        {
+          "params": [
+            "1m"
+          ],
+          "type": "time"
+        },
+        {
+          "params": [
+            "null"
+          ],
+          "type": "fill"
+        }
+      ],
       "hide": false,
-      "policy": "autogen",
-      "resultFormat": "time_series",
+      "measurement": "device",
       "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "B",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "value"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "mean"
+          }
+        ]
+      ],
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "FurnaceThermostatRelativeHumidity"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Basement Fireplace",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "A",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Furnace"
-    },
-    {
-      "refId": "A",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "BasementFireplaceRelativeHumidity"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Main Floor Fireplace",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "C",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Basement Fireplace"
-    },
-    {
-      "refId": "C",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "MainFloorFireplaceRelativeHumidity"
         }
-      ],
-      "groupBy": [
-        {
-          "type": "time",
-          "params": [
-            "1m"
-          ]
-        },
-        {
-          "type": "fill",
-          "params": [
-            "null"
-          ]
-        }
-      ],
-      "select": [
-        [
-          {
-            "type": "field",
-            "params": [
-              "value"
-            ]
-          },
-          {
-            "type": "mean",
-            "params": []
-          }
-        ]
-      ],
-      "measurement": "device",
-      "alias": "Main Floor Fireplace"
+      ]
     }
   ],
   "thresholds": [],
@@ -202,7 +204,5 @@
   "yaxis": {
     "align": false,
     "alignLevel": null
-  },
-  "datasource": "InfluxDB",
-  "links": []
+  }
 }

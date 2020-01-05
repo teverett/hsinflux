@@ -6,8 +6,8 @@
   "datasource": "InfluxDB",
   "fill": 1,
   "gridPos": {
-    "h": 8,
-    "w": 24,
+    "h": 6,
+    "w": 12,
     "x": 0,
     "y": 0
   },
@@ -207,7 +207,8 @@
           "operator": "=",
           "value": "GarageMotionDetectorTemperature"
         }
-      ]
+      ],
+      "hide": true
     },
     {
       "alias": "Main Fireplace",

@@ -1,207 +1,207 @@
 {
-  "type": "graph",
-  "title": "Dimmers",
+  "aliasColors": {},
+  "bars": false,
+  "dashLength": 10,
+  "dashes": false,
+  "datasource": "InfluxDB",
+  "fill": 1,
   "gridPos": {
-    "x": 0,
-    "y": 6,
+    "h": 8,
     "w": 12,
-    "h": 8
+    "x": 0,
+    "y": 6
   },
   "id": 6,
-  "datasource": "InfluxDB",
+  "legend": {
+    "avg": false,
+    "current": false,
+    "max": false,
+    "min": false,
+    "show": true,
+    "total": false,
+    "values": false
+  },
+  "lines": true,
+  "linewidth": 1,
+  "links": [],
+  "nullPointMode": "null",
+  "percentage": false,
+  "pointradius": 5,
+  "points": false,
+  "renderer": "flot",
+  "seriesOverrides": [],
+  "spaceLength": 10,
+  "stack": false,
+  "steppedLine": false,
   "targets": [
     {
-      "refId": "A",
-      "policy": "autogen",
-      "resultFormat": "time_series",
+      "alias": "Dining Room %",
+      "groupBy": [
+        {
+          "params": [
+            "1m"
+          ],
+          "type": "time"
+        },
+        {
+          "params": [
+            "null"
+          ],
+          "type": "fill"
+        }
+      ],
+      "measurement": "device",
       "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "A",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "value"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "mean"
+          }
+        ]
+      ],
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "DiningRoomDimmer"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Kitchen Dimmer %",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "B",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Dining Room %"
-    },
-    {
-      "refId": "B",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "KitchenDimmer"
         }
-      ],
+      ]
+    },
+    {
+      "alias": "Living Room Dimmer %",
       "groupBy": [
         {
-          "type": "time",
           "params": [
             "1m"
-          ]
+          ],
+          "type": "time"
         },
         {
-          "type": "fill",
           "params": [
             "null"
-          ]
+          ],
+          "type": "fill"
         }
       ],
+      "measurement": "device",
+      "orderByTime": "ASC",
+      "policy": "autogen",
+      "refId": "C",
+      "resultFormat": "time_series",
       "select": [
         [
           {
-            "type": "field",
             "params": [
               "value"
-            ]
+            ],
+            "type": "field"
           },
           {
-            "type": "mean",
-            "params": []
+            "params": [],
+            "type": "mean"
           }
         ]
       ],
-      "measurement": "device",
-      "alias": "Kitchen Dimmer %"
-    },
-    {
-      "refId": "C",
-      "policy": "autogen",
-      "resultFormat": "time_series",
-      "orderByTime": "ASC",
       "tags": [
         {
           "key": "name",
           "operator": "=",
           "value": "LivingRoomDimmer"
         }
-      ],
-      "groupBy": [
-        {
-          "type": "time",
-          "params": [
-            "1m"
-          ]
-        },
-        {
-          "type": "fill",
-          "params": [
-            "null"
-          ]
-        }
-      ],
-      "select": [
-        [
-          {
-            "type": "field",
-            "params": [
-              "value"
-            ]
-          },
-          {
-            "type": "mean",
-            "params": []
-          }
-        ]
-      ],
-      "measurement": "device",
-      "alias": "Living Room Dimmer %"
+      ]
     }
   ],
-  "renderer": "flot",
-  "yaxes": [
-    {
-      "label": null,
-      "show": true,
-      "logBase": 1,
-      "min": null,
-      "max": null,
-      "format": "short"
-    },
-    {
-      "label": null,
-      "show": true,
-      "logBase": 1,
-      "min": null,
-      "max": null,
-      "format": "short"
-    }
-  ],
+  "thresholds": [],
+  "timeFrom": null,
+  "timeRegions": [],
+  "timeShift": null,
+  "title": "Dimmers",
+  "tooltip": {
+    "shared": true,
+    "sort": 0,
+    "value_type": "individual"
+  },
+  "type": "graph",
   "xaxis": {
-    "show": true,
+    "buckets": null,
     "mode": "time",
     "name": null,
-    "values": [],
-    "buckets": null
+    "show": true,
+    "values": []
   },
+  "yaxes": [
+    {
+      "format": "short",
+      "label": null,
+      "logBase": 1,
+      "max": null,
+      "min": null,
+      "show": true
+    },
+    {
+      "format": "short",
+      "label": null,
+      "logBase": 1,
+      "max": null,
+      "min": null,
+      "show": true
+    }
+  ],
   "yaxis": {
     "align": false,
     "alignLevel": null
-  },
-  "lines": true,
-  "fill": 1,
-  "linewidth": 1,
-  "dashes": false,
-  "dashLength": 10,
-  "spaceLength": 10,
-  "points": false,
-  "pointradius": 5,
-  "bars": false,
-  "stack": false,
-  "percentage": false,
-  "legend": {
-    "show": true,
-    "values": false,
-    "min": false,
-    "max": false,
-    "current": false,
-    "total": false,
-    "avg": false
-  },
-  "nullPointMode": "null",
-  "steppedLine": false,
-  "tooltip": {
-    "value_type": "individual",
-    "shared": true,
-    "sort": 0
-  },
-  "timeFrom": null,
-  "timeShift": null,
-  "aliasColors": {},
-  "seriesOverrides": [],
-  "thresholds": [],
-  "timeRegions": [],
-  "links": []
+  }
 }
