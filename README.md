@@ -1,4 +1,6 @@
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/049ad3bb9199453b8670e1afbeaa9b2e)](https://www.codacy.com/manual/teverett/hsinflux?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=teverett/hsinflux&amp;utm_campaign=Badge_Grade)
+
 HomeSeer InfluxDB Importer
 ========
 
