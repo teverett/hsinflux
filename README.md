@@ -19,19 +19,19 @@ Screen shots
 
 House Temperatures
 
-![](https://github.com/teverett/hsinflux/screenshots/temperatures.png)
+![temperatures.png](https://github.com/teverett/hsinflux/screenshots/temperatures.png)
 
 House Relative Humidity
 
-![](https://github.com/teverett/hsinflux/screenshots/humidities.png)
+![humidities.png](https://github.com/teverett/hsinflux/screenshots/humidities.png)
 
 Battery Status
 
-![](https://github.com/teverett/hsinflux/screenshots/batteries.png)
+![batteries.png](https://github.com/teverett/hsinflux/screenshots/batteries.png)
 
 Dimmer Status
 
-![](https://github.com/teverett/hsinflux/screenshots/dimmers.png)
+![dimmers.png](https://github.com/teverett/hsinflux/screenshots/dimmers.png)
 
 
 Configuration
