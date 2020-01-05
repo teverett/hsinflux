@@ -8,8 +8,10 @@ import com.khubla.hsclient.domain.*;
 import com.khubla.hsinflux.*;
 
 /**
- * @author Tom Everett.
- * @copyright Copyright (C) 2020,tom@khubla.com
+ * @author Tom Everett
+ *         <p>
+ *         Copyright (C) 2020,tom@khubla.com
+ *         </p>
  */
 public class DevicePointGeneratorImpl implements PointGenerator<Device> {
 	private static final String MEASUREMENT_NAME = "device";

@@ -1,8 +1,10 @@
 package com.khubla.hsinflux;
 
 /**
- * @author Tom Everett.
- * @copyright Copyright (C) 2020,tom@khubla.com
+ * @author Tom Everett
+ *         <p>
+ *         Copyright (C) 2020,tom@khubla.com
+ *         </p>
  */
 public class Poll {
 	private final int points;

@@ -7,8 +7,10 @@ import org.influxdb.dto.*;
 import com.khubla.hsinflux.*;
 
 /**
- * @author Tom Everett.
- * @copyright Copyright (C) 2020,tom@khubla.com
+ * @author Tom Everett
+ *         <p>
+ *         Copyright (C) 2020,tom@khubla.com
+ *         </p>
  */
 public class PollPointGeneratorImpl implements PointGenerator<Poll> {
 	private static final String MEASUREMENT_NAME = "poll";
