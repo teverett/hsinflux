@@ -12,6 +12,28 @@ License
 
 hsinflux is distributed under the BSD 3-Clause License.
 
+Screen shots
+-------------------
+
+[Grafana](https://grafana.com/) was used to produce graphs and alerts on the InfluxDB Data
+
+House Temperatures
+
+![](https://github.com/teverett/hsinflux/screenshots/temperatures.png)
+
+House Relative Humidity
+
+![](https://github.com/teverett/hsinflux/screenshots/humidities.png)
+
+Battery Status
+
+![](https://github.com/teverett/hsinflux/screenshots/batteries.png)
+
+Dimmer Status
+
+![](https://github.com/teverett/hsinflux/screenshots/dimmers.png)
+
+
 Configuration
 -------------------
 
@@ -48,12 +70,11 @@ USE hsinflux
 CREATE USER INFLUXUSERNAME WITH PASSWORD 'INFLUXPASSWORD' WITH ALL PRIVILEGES;
 ```
 
-
 Usage
 -------------------
 
 ```
 java -jar target/hsinflux-1.0.0-SNAPSHOT.jar 
 ```
+A log file is generated to hsinflux.log and rotated every 30 days.
 
-[Grafana](https://grafana.com/) is a great way to produce graphs and alerts on the InfluxDB Data
