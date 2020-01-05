@@ -1,5 +1,9 @@
 package com.khubla.hsinflux;
 
+/**
+ * @author Tom Everett.
+ * @copyright Copyright (C) 2020,tom@khubla.com
+ */
 public class Main {
 	public static void main(String... args) {
 		System.out.println("HomeSeer Influx Importer");

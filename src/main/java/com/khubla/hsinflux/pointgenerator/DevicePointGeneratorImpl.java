@@ -7,6 +7,10 @@ import org.influxdb.dto.*;
 import com.khubla.hsclient.domain.*;
 import com.khubla.hsinflux.*;
 
+/**
+ * @author Tom Everett.
+ * @copyright Copyright (C) 2020,tom@khubla.com
+ */
 public class DevicePointGeneratorImpl implements PointGenerator<Device> {
 	private static final String MEASUREMENT_NAME = "device";
 

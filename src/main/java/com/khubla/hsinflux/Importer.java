@@ -12,6 +12,10 @@ import com.khubla.hsclient.*;
 import com.khubla.hsclient.domain.*;
 import com.khubla.hsinflux.pointgenerator.*;
 
+/**
+ * @author Tom Everett.
+ * @copyright Copyright (C) 2020,tom@khubla.com
+ */
 public class Importer {
 	/**
 	 * logger

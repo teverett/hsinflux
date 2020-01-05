@@ -3,6 +3,10 @@ package com.khubla.hsinflux;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author Tom Everett.
+ * @copyright Copyright (C) 2020,tom@khubla.com
+ */
 public class Configuration {
 	private static final String FILENAME = "hsinflux.properties";
 	private static Configuration instance = null;
