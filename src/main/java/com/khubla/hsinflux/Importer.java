@@ -9,6 +9,7 @@ import org.influxdb.dto.*;
 
 import com.khubla.hsclient.*;
 import com.khubla.hsclient.domain.*;
+import com.khubla.hsinflux.pointgenerator.*;
 
 public class Importer {
 	private final Configuration configuration;
@@ -61,7 +62,7 @@ public class Importer {
 							public void run() {
 								try {
 									final Device device = updateDevice(ref);
-									final PointGenerator<Device> pointGenerator = new GenericPointGeneratorImpl();
+									final PointGenerator<Device> pointGenerator = new DevicePointGeneratorImpl();
 									final Point point = pointGenerator.generatePoint(device);
 									points.add(point);
 								} catch (final Exception e) {
@@ -82,12 +83,16 @@ public class Importer {
 					/*
 					 * write
 					 */
-					writeToInflux(points);
+					writeDevicePointsToInflux(points);
 					/*
 					 * log the time
 					 */
 					final long t = System.currentTimeMillis() - start;
-					System.out.println("Data collection performed in " + Long.toString(t) + " ms on " + configuration.getPollingthreads() + " threads");
+					/*
+					 * write poll data
+					 */
+					writePollDataToInflux(new Poll(points.size(), configuration.getPollingthreads(), t));
+					System.out.println("Data collection of " + points.size() + " points performed in " + Long.toString(t) + " ms on " + configuration.getPollingthreads() + " threads");
 					/*
 					 * nap time
 					 */
@@ -110,11 +115,11 @@ public class Importer {
 	}
 
 	/**
-	 * write to influx on a thread
+	 * write to device data to influx on a thread
 	 *
 	 * @param batchPoints
 	 */
-	private void writeToInflux(Queue<Point> points) {
+	private void writeDevicePointsToInflux(Queue<Point> points) {
 		/*
 		 * make the batch
 		 */
@@ -127,6 +132,28 @@ public class Importer {
 			try {
 				influxDB = InfluxDBFactory.connect(configuration.getInfluxurl(), configuration.getInfluxuser(), configuration.getInfluxpassword());
 				influxDB.write(batchPoints);
+			} catch (final Exception e) {
+				e.printStackTrace();
+			} finally {
+				influxDB.close();
+			}
+		}).start();
+	}
+
+	/**
+	 * write poll data to influx on a thread
+	 *
+	 * @param poll
+	 */
+	private void writePollDataToInflux(Poll poll) {
+		new Thread(() -> {
+			InfluxDB influxDB = null;
+			try {
+				final PointGenerator<Poll> pointGenerator = new PollPointGeneratorImpl();
+				final Point point = pointGenerator.generatePoint(poll);
+				influxDB = InfluxDBFactory.connect(configuration.getInfluxurl(), configuration.getInfluxuser(), configuration.getInfluxpassword());
+				influxDB.setDatabase(configuration.getInfluxdb());
+				influxDB.write(point);
 			} catch (final Exception e) {
 				e.printStackTrace();
 			} finally {
