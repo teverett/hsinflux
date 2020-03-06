@@ -40,7 +40,8 @@ public class Importer {
 			/*
 			 * get devices
 			 */
-			hsClient = new HSClientImpl(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
+			hsClient = new HSClientImpl();
+			hsClient.connect(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
 			devices = hsClient.getDevicesByRef();
 		} catch (final Exception e) {
 			logger.error("Error getting devices from HomeSeer", e);
@@ -126,7 +127,8 @@ public class Importer {
 	private Device updateDevice(Integer ref) throws HSClientException, IOException {
 		HSClient hsClient = null;
 		try {
-			hsClient = new HSClientImpl(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
+			hsClient = new HSClientImpl();
+			hsClient.connect(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
 			return hsClient.getDevice(ref);
 		} catch (final Exception e) {
 			logger.error("Error updating device " + ref, e);
