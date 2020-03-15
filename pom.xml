@@ -12,7 +12,7 @@
 		<target.jvm>1.8</target.jvm>
 		<required-maven-version>3.3.1</required-maven-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<hsclient.version>1.3</hsclient.version>
+		<hsclient.version>1.7</hsclient.version>
 	</properties>
 	<developers>
 		<developer>
