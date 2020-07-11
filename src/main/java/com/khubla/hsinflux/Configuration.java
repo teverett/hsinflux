@@ -3,6 +3,8 @@ package com.khubla.hsinflux;
 import java.io.*;
 import java.util.*;
 
+import com.khubla.hsclient.*;
+
 /**
  * @author Tom Everett
  *         <p>
@@ -20,9 +22,7 @@ public class Configuration {
 		return instance;
 	}
 
-	private String hsurl;
-	private String hsuser;
-	private String hspassword;
+	private HSConfiguration hsConfiguration;
 	private String influxurl;
 	private String influxuser;
 	private String influxpassword;
@@ -34,16 +34,8 @@ public class Configuration {
 		load();
 	}
 
-	public String getHspassword() {
-		return hspassword;
-	}
-
-	public String getHsurl() {
-		return hsurl;
-	}
-
-	public String getHsuser() {
-		return hsuser;
+	public HSConfiguration getHsConfiguration() {
+		return hsConfiguration;
 	}
 
 	public String getInfluxdb() {
@@ -74,9 +66,7 @@ public class Configuration {
 		try {
 			final Properties properties = new Properties();
 			properties.load(new FileInputStream(FILENAME));
-			hsurl = properties.getProperty("hsurl");
-			hsuser = properties.getProperty("hsuser");
-			hspassword = properties.getProperty("hspassword");
+			hsConfiguration = new HSConfiguration(properties.getProperty("hsurl"), properties.getProperty("hsuser"), properties.getProperty("hspassword"));
 			influxurl = properties.getProperty("influxurl");
 			influxuser = properties.getProperty("influxuser");
 			influxpassword = properties.getProperty("influxpassword");

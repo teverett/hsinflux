@@ -9,7 +9,7 @@ import org.influxdb.dto.*;
 import org.slf4j.*;
 
 import com.khubla.hsclient.*;
-import com.khubla.hsclient.domain.*;
+import com.khubla.hsclient.poll.*;
 import com.khubla.hsinflux.pointgenerator.*;
 
 /**
@@ -18,7 +18,7 @@ import com.khubla.hsinflux.pointgenerator.*;
  *         Copyright (C) 2020,tom@khubla.com
  *         </p>
  */
-public class Importer {
+public class Importer implements DataPointCallback {
 	/**
 	 * logger
 	 */
@@ -27,115 +27,47 @@ public class Importer {
 	 * configuration for hsinflux
 	 */
 	private final Configuration configuration;
+	/**
+	 * poller
+	 */
+	private final Poller poller;
+	/**
+	 * points queue
+	 */
+	private Queue<Point> points;
 
 	public Importer(Configuration configuration) {
 		super();
 		this.configuration = configuration;
+		poller = new Poller(configuration.getHsConfiguration(), this.configuration.getPollinginterval(), this, this.configuration.getPollingthreads());
+	}
+
+	@Override
+	public void beginUpdate() {
+		points = new ConcurrentLinkedQueue<Point>();
+	}
+
+	@Override
+	public void endUpdate(long timems) {
+		/*
+		 * write points
+		 */
+		writeDevicePointsToInflux(points);
+		/*
+		 * write poll data
+		 */
+		writePollDataToInflux(new Poll(points.size(), configuration.getPollingthreads(), timems));
 	}
 
 	public void run() throws HSClientException, InterruptedException, IOException {
-		Map<Integer, Device> devices = null;
-		HSClient hsClient = null;
-		try {
-			/*
-			 * get devices
-			 */
-			hsClient = new HSClientImpl();
-			hsClient.connect(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
-			devices = hsClient.getDevicesByRef();
-		} catch (final Exception e) {
-			logger.error("Error getting devices from HomeSeer", e);
-		} finally {
-			if (null != hsClient) {
-				hsClient.close();
-			}
-		}
-		/*
-		 * spin
-		 */
-		if (devices != null) {
-			while (true) {
-				try {
-					final long start = System.currentTimeMillis();
-					/*
-					 * thread pool
-					 */
-					final ExecutorService executorService = Executors.newFixedThreadPool(configuration.getPollingthreads());
-					/*
-					 * list
-					 */
-					final Queue<Point> points = new ConcurrentLinkedQueue<Point>();
-					/*
-					 * walk devices
-					 */
-					for (final Integer ref : devices.keySet()) {
-						/*
-						 * runnable
-						 */
-						final Runnable worker = new Runnable() {
-							@Override
-							public void run() {
-								try {
-									final Device device = updateDevice(ref);
-									if (null != device) {
-										final PointGenerator<Device> pointGenerator = new DevicePointGeneratorImpl();
-										final Point point = pointGenerator.generatePoint(device);
-										points.add(point);
-									}
-								} catch (final Exception e) {
-									logger.error("Error collecting data for device " + ref, e);
-								}
-							}
-						};
-						/*
-						 * add to service
-						 */
-						executorService.execute(worker);
-					}
-					/*
-					 * wait
-					 */
-					executorService.shutdown();
-					executorService.awaitTermination(60, TimeUnit.SECONDS);
-					/*
-					 * write
-					 */
-					writeDevicePointsToInflux(points);
-					/*
-					 * log the time
-					 */
-					final long t = System.currentTimeMillis() - start;
-					/*
-					 * write poll data
-					 */
-					writePollDataToInflux(new Poll(points.size(), configuration.getPollingthreads(), t));
-					/*
-					 * log
-					 */
-					logger.info("Data collection of " + points.size() + " points performed in " + Long.toString(t) + " ms on " + configuration.getPollingthreads() + " threads");
-					/*
-					 * nap time
-					 */
-					Thread.sleep((configuration.getPollinginterval() * 60 * 1000) - t);
-				} catch (final Exception e) {
-					logger.error("Error polling", e);
-				}
-			}
-		}
+		poller.run();
 	}
 
-	private Device updateDevice(Integer ref) throws HSClientException, IOException {
-		HSClient hsClient = null;
-		try {
-			hsClient = new HSClientImpl();
-			hsClient.connect(configuration.getHsurl(), configuration.getHsuser(), configuration.getHspassword());
-			return hsClient.getDevice(ref);
-		} catch (final Exception e) {
-			logger.error("Error updating device " + ref, e);
-			return null;
-		} finally {
-			hsClient.close();
-		}
+	@Override
+	public void update(DataPoint dataPoint) {
+		final PointGenerator<DataPoint> pointGenerator = new DevicePointGeneratorImpl();
+		final Point point = pointGenerator.generatePoint(dataPoint);
+		points.add(point);
 	}
 
 	/**
