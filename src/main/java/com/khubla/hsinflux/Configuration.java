@@ -23,10 +23,7 @@ public class Configuration {
 	}
 
 	private HSConfiguration hsConfiguration;
-	private String influxurl;
-	private String influxuser;
-	private String influxpassword;
-	private String influxdb;
+	private InfluxConfiguration influxConfiguration;
 	private int pollingthreads;
 	private int pollinginterval;
 
@@ -38,20 +35,8 @@ public class Configuration {
 		return hsConfiguration;
 	}
 
-	public String getInfluxdb() {
-		return influxdb;
-	}
-
-	public String getInfluxpassword() {
-		return influxpassword;
-	}
-
-	public String getInfluxurl() {
-		return influxurl;
-	}
-
-	public String getInfluxuser() {
-		return influxuser;
+	public InfluxConfiguration getInfluxConfiguration() {
+		return influxConfiguration;
 	}
 
 	public int getPollinginterval() {
@@ -67,12 +52,10 @@ public class Configuration {
 			final Properties properties = new Properties();
 			properties.load(new FileInputStream(FILENAME));
 			hsConfiguration = new HSConfiguration(properties.getProperty("hsurl"), properties.getProperty("hsuser"), properties.getProperty("hspassword"));
-			influxurl = properties.getProperty("influxurl");
-			influxuser = properties.getProperty("influxuser");
-			influxpassword = properties.getProperty("influxpassword");
+			influxConfiguration = new InfluxConfiguration(properties.getProperty("influxurl"), properties.getProperty("influxuser"), properties.getProperty("influxpassword"),
+					properties.getProperty("influxdb"));
 			pollingthreads = Integer.parseInt(properties.getProperty("pollingthreads"));
 			pollinginterval = Integer.parseInt(properties.getProperty("pollinginterval"));
-			influxdb = properties.getProperty("influxdb");
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}

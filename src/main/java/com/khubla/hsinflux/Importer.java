@@ -79,14 +79,15 @@ public class Importer implements DataPointCallback {
 		/*
 		 * make the batch
 		 */
-		final BatchPoints batchPoints = BatchPoints.database(configuration.getInfluxdb()).build();
+		final BatchPoints batchPoints = BatchPoints.database(configuration.getInfluxConfiguration().getInfluxdb()).build();
 		for (final Point point : points) {
 			batchPoints.point(point);
 		}
 		new Thread(() -> {
 			InfluxDB influxDB = null;
 			try {
-				influxDB = InfluxDBFactory.connect(configuration.getInfluxurl(), configuration.getInfluxuser(), configuration.getInfluxpassword());
+				influxDB = InfluxDBFactory.connect(configuration.getInfluxConfiguration().getInfluxurl(), configuration.getInfluxConfiguration().getInfluxuser(),
+						configuration.getInfluxConfiguration().getInfluxpassword());
 				influxDB.write(batchPoints);
 			} catch (final Exception e) {
 				logger.error("Error writing device data to InfluxDB ", e);
@@ -107,8 +108,9 @@ public class Importer implements DataPointCallback {
 			try {
 				final PointGenerator<Poll> pointGenerator = new PollPointGeneratorImpl();
 				final Point point = pointGenerator.generatePoint(poll);
-				influxDB = InfluxDBFactory.connect(configuration.getInfluxurl(), configuration.getInfluxuser(), configuration.getInfluxpassword());
-				influxDB.setDatabase(configuration.getInfluxdb());
+				influxDB = InfluxDBFactory.connect(configuration.getInfluxConfiguration().getInfluxurl(), configuration.getInfluxConfiguration().getInfluxuser(),
+						configuration.getInfluxConfiguration().getInfluxpassword());
+				influxDB.setDatabase(configuration.getInfluxConfiguration().getInfluxdb());
 				influxDB.write(point);
 			} catch (final Exception e) {
 				logger.error("Error writing poll data to InfluxDB ", e);
