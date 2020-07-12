@@ -4,7 +4,7 @@
 	<artifactId>hsinflux</artifactId>
 	<packaging>jar</packaging>
 	<name>khubla.com HomeSeer InfluxDB Importer</name>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<description>An InfluxDB importer for HomeSeer</description>
 	<properties>
 		<target.jvm>1.8</target.jvm>
