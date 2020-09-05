@@ -39,7 +39,7 @@ public class Importer implements DataPointCallback {
 	public Importer(Configuration configuration) {
 		super();
 		this.configuration = configuration;
-		poller = new Poller(configuration.getHsConfiguration(), this.configuration.getPollinginterval(), this, this.configuration.getPollingthreads());
+		poller = new Poller(configuration.getHsConfiguration(), this.configuration.getPollinginterval(), this, this.configuration.getPollingthreads(), false);
 	}
 
 	@Override
