@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hsclient.version>1.13</hsclient.version>
 		<dependency-check-maven.version>5.3.2</dependency-check-maven.version>
-		<influx.version>2.19</influx.version>
+		<influx.version>2.20</influx.version>
 		<commons-cli.version>1.4</commons-cli.version>
 		<junit.version>4.13</junit.version>
 	</properties>
