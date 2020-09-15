@@ -6,6 +6,13 @@ HomeSeer InfluxDB Importer
 
 A Java application which imports HomeSeer device status data into InfluxDB
 
+hsInflux is one of numerous HomeSeer support applications created by khubla.com, including
+
+* [hsClient](https://github.com/teverett/hsclient)
+* [hsInflux](https://github.com/teverett/hsinflux)
+* [hsMQTT](https://github.com/teverett/hsOpenAPI)
+* [hsOpenAPI](https://github.com/teverett/hsOpenAPI)
+
 
 License
 -------------------
