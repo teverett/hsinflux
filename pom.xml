@@ -7,7 +7,7 @@
 	<version>1.0.6-SNAPSHOT</version>
 	<description>An InfluxDB importer for HomeSeer</description>
 	<properties>
-		<target.jvm>1.8</target.jvm>
+		<target.jvm>11</target.jvm>
 		<required-maven-version>3.3.1</required-maven-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hsclient.version>1.17</hsclient.version>
