@@ -11,7 +11,7 @@
 		<required-maven-version>3.3.1</required-maven-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hsclient.version>1.18</hsclient.version>
-		<influx.version>2.20</influx.version>
+		<influx.version>2.21</influx.version>
 		<commons-cli.version>1.4</commons-cli.version>
 		<junit.version>5.4.0</junit.version>
 	</properties>
