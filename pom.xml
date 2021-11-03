@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hsclient.version>1.18</hsclient.version>
 		<influx.version>2.22</influx.version>
-		<commons-cli.version>1.4</commons-cli.version>
+		<commons-cli.version>1.5.0</commons-cli.version>
 		<junit.version>5.8.1</junit.version>
 	</properties>
 	<developers>
